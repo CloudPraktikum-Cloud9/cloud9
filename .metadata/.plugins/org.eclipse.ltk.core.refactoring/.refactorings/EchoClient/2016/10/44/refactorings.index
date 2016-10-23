@@ -1,3 +1,9 @@
 1477213009319	Delete element
 1477214431552	Rename package 'models'
 1477215531973	Encapsulate field 'body'
+1477217685916	Delete element
+1477217921745	Rename type 'Connection'
+1477222121268	Rename compilation unit 'message.java'
+1477224919097	Rename compilation unit 'UiManager.java'
+1477229171578	Encapsulate field 'args'
+1477229178834	Encapsulate field 'help'

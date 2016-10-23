@@ -1,0 +1,29 @@
+package ui;
+
+public class Console extends UserInterfaceImpl{
+
+	@Override
+	public void displayHelp() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void readCommand() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void writeMessage() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void quit() {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

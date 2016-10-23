@@ -1,0 +1,91 @@
+package ui;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
+public class Console extends UserInterfaceImpl{
+
+	private String prompt;
+	private String escapeChar;
+	private String currentCommand;
+	private Map<String,Command> commandsSupported =new HashMap<String,Command>();
+	
+	
+	public Console() {
+		commandsSupported.put("connect", new Command(2, "Use : connect <address> <port> \n Description :  To establish a TCP-connection to the echo server"));
+		commandsSupported.put("disconnect", new Command(0, "Use : disconnect /n Description : To disconnect from the connected server "));
+		commandsSupported.put("send", new Command(1, "Use : send <message> /n Description : Sends a text message to the echo server"));
+		commandsSupported.put("logLevel", new Command(1, "Use : logLevel <level> /n Description :Sets the logger to the specified log level (ALL | DEBUG | INFO | WARN | ERROR | FATAL | OFF)."));
+		commandsSupported.put("help", new Command(0, "Use : help /n Description :Shows this message containing all valid commands with their descriptions"));
+		commandsSupported.put("quit", new Command(0, "Use : quit /n Description :Tears down the active connection to the server and exits the program execution."));
+		this.prompt = "EchoClient>";
+		this.escapeChar = "\n";
+		this.currentCommand = null;
+	}
+	
+	BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+	
+	public boolean printPrompt() {
+		System.out.println(this.prompt);
+		return true;
+	}
+	
+	public boolean displayHelp() {
+		this.writeMessage("Please use the following commands:");
+		for (Entry<String, Command> entry : this.commandsSupported.entrySet()) {
+			this.writeMessage(entry.getValue().getHelp());
+		}
+		return true;
+	}
+
+	@Override
+	// Reads the command and returns tokens
+	public String[] readCommand() {
+		String[] tokens = null;
+		try {
+			this.currentCommand = stdin.readLine();
+			tokens = this.currentCommand.split(" ");
+		} catch (IOException e) {
+			// IO exception while reading
+		}
+		return tokens;
+	}
+
+	@Override
+	public void writeMessage(String message) {
+		// TODO Auto-generated method stub
+		System.out.println(message);
+		
+	}
+
+	@Override
+	public void quit() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public boolean isValidCommand(String command) {
+		if(this.commandsSupported.containsKey(command)) return true;
+		else return false;
+	}
+	
+	@Override
+	public void start() {
+		String[] tokens = null;
+		this.printPrompt();
+		while(true) {
+			this.printPrompt();
+			tokens = this.readCommand();
+			if (isValidCommand(tokens[0])) {
+				
+			}
+			
+		}
+	}
+
+}

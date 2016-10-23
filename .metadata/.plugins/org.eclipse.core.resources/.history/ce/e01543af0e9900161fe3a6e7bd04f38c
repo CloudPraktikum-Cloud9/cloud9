@@ -1,0 +1,61 @@
+package communication;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
+
+public class ConnectionImpl implements Connection {
+
+	private String serverAddress;
+	private int tcpPort;
+	private SocketChannel socketChannel;
+	private ByteBuffer messageBuf;
+	
+	public ConnectionImpl(String address, int port) {
+		this.serverAddress = address;
+		this.tcpPort = port;
+		this.socketChannel=null;
+		this.messageBuf = ByteBuffer.allocate(1024);
+	}
+	
+	
+	public ConnectionImpl create(String address, int port) {
+		ConnectionImpl connection = new ConnectionImpl(address,port);
+		return connection;
+	}
+	
+	@Override
+	public SocketChannel connect() throws IOException {
+		SocketChannel socketChannel = SocketChannel.open();
+		socketChannel.connect(new InetSocketAddress(this.serverAddress, this.tcpPort));;
+		
+		return socketChannel;
+	}
+
+	@Override
+	public boolean disconnect() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean send(byte[] message) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public byte[] receive() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ConnectionState status() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

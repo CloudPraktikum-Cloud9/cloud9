@@ -1,0 +1,94 @@
+package ui;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Dictionary;
+import java.util.Map;
+
+public class Console extends UserInterfaceImpl{
+
+	private String prompt = "EchoClient>";
+	private String escapeChar = "\n";
+	private String currentCommand = null;
+	private Dictionary<String,Command> commandsSupported;
+/*	 = {
+			"connect", , 
+			"disconnect" : {}, 
+			"send" : {}, 
+			"logLevel": {}, 
+			"help" : {}, 
+			"quit": {},
+			};*/
+	
+	
+	public Console() {
+		commandsSupported.put("connect", Command(2, "Use : connect <address> <port>: To establish a TCP-connection to the echo server"));
+		
+	}
+	
+	BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+	
+	public boolean printPrompt() {
+		System.out.println(this.prompt);
+		return true;
+	}
+	
+	public boolean displayHelp() {
+		System.out.println(
+				"Please use the following commands: \n" +
+				"\t connect <address> <port>: To establish a TCP-connection to the echo server.\n" +
+				"\t disconnect: To disconnect from the connected server.\n" +
+				"\t send <message>: Sends a text message to the echo server.\n" +
+				"\t logLevel <level>: Sets the logger to the specified log level (ALL | DEBUG | INFO | WARN | ERROR | FATAL | OFF).\n" +
+				"\t help: Shows this message containing all valid commands with their descriptions.\n" +
+				"\t quit: Tears down the active connection to the server and exits the program execution.");
+		
+		return true;
+	}
+
+	@Override
+	// Reads the commands and returns tokens if valid else returns illeagel
+	public String[] readCommand() {
+		String[] tokens = null;
+		try {
+			this.currentCommand = stdin.readLine();
+			tokens = this.currentCommand.split(" ");
+		} catch (IOException e) {
+			// IO exception while reading
+		}
+		return tokens;
+	}
+
+	@Override
+	public void writeMessage() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void quit() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public boolean isValidCommand(String command) {
+		if this.commandsSupported.contains
+		return false;
+	}
+	
+	@Override
+	public void start() {
+		String[] tokens = null;
+		this.printPrompt();
+		while(true) {
+			this.printPrompt();
+			tokens = this.readCommand();
+			if (isValidCommand(tokens[0])) {
+				
+			}
+			
+		}
+	}
+
+}

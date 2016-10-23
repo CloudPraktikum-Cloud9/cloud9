@@ -1,0 +1,7 @@
+package communication;
+
+public interface Connection {
+	public ConnectionImpl connect(String address, int port);
+	public boolean disconnect(ConnectionImpl connection);
+	
+}

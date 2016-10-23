@@ -1,0 +1,9 @@
+package ui;
+
+public abstract class UserInterfaceImpl {
+	
+	public abstract void displayHelp();
+	public abstract void readCommand();
+	public abstract void writeMessage();
+	public abstract void quit();
+}

@@ -1,0 +1,15 @@
+package ui;
+
+public class Command {
+	private int args;
+	private String help;
+	
+	public Command(args, help) {
+		this.args = args;
+		this.help = help;
+	}
+}
+
+
+	
+	
