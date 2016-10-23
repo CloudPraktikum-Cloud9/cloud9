@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 
 public class Application implements ClientServerCommunication{
@@ -86,6 +89,12 @@ public class Application implements ClientServerCommunication{
 		Application a = new Application();
 		BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
 		
+		/*
+		 * Initializes file logger
+		 */
+		Logger fileLogger = Logger.getLogger(Application.class);
+		PropertyConfigurator.configure("logs/log.config");
+
 		
 		boolean bool_quit = false;
 		
@@ -157,16 +166,28 @@ public class Application implements ClientServerCommunication{
 								System.out.print("EchoClient> Your input does not match any valid commands. \n");
 								printHelpText();
 							} else if(tokens[1].equals("ALL")) {
+								fileLogger.setLevel(Level.ALL);
+								fileLogger.info("logLevel was set to \"ALL\".");
 								System.out.print("EchoClient> logLevel was set to \"ALL\"!\n");
 							} else if(tokens[1].equals("DEBUG")) {
+								fileLogger.setLevel(Level.DEBUG);
+								fileLogger.info("logLevel was set to \"DEBUG\".");
 								System.out.print("EchoClient> logLevel was set to \"DEBUG\"!\n");
 							} else if(tokens[1].equals("INFO")) {
+								fileLogger.setLevel(Level.INFO);
+								fileLogger.info("logLevel was set to \"INFO\".");
 								System.out.print("EchoClient> logLevel was set to \"INFO\"!\n");
 							} else if(tokens[1].equals("ERROR")) {
+								fileLogger.setLevel(Level.ERROR);
+								fileLogger.info("logLevel was set to \"ERROR\".");
 								System.out.print("EchoClient> logLevel was set to \"ERROR\"!\n");
 							} else if(tokens[1].equals("FATAL")) {
+								fileLogger.setLevel(Level.FATAL);
+								fileLogger.info("logLevel was set to \"FATAL\".");
 								System.out.print("EchoClient> logLevel was set to \"FATAL\"!\n");
 							} else if(tokens[1].equals("OFF")) {
+								fileLogger.setLevel(Level.OFF);
+								fileLogger.info("logLevel was set to \"OFF\".");
 								System.out.print("EchoClient> logLevel was set to \"OFF\"!\n");
 							} else {
 								System.out.print("EchoClient> Error! Invalid log level. \n");
