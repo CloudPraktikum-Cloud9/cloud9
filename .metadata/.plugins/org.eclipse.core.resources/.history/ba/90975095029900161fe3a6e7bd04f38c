@@ -1,0 +1,14 @@
+package message;
+
+public enum MessageType {
+	TELNET(1);
+	
+	private final int type;
+	
+	private MessageType(int type) {
+		this.type = type;
+	}
+	
+	
+	
+}

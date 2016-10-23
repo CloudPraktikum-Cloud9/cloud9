@@ -1,0 +1,19 @@
+package message;
+
+public class message {
+	private String type;
+	private String body;
+	private long maxSize;
+	
+	public message(String type) {
+		
+	}
+	
+	public byte[] marshal(message message) {
+		
+	}
+	
+	public message unmarshal(byte[] messageStream) {
+		return this;
+	}
+}

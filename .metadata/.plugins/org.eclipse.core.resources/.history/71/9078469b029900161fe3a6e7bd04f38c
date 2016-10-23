@@ -1,0 +1,16 @@
+package message;
+
+public enum MessageType {
+	TELNET(1);
+	
+	private final int type;
+	
+	MessageType(int type) {
+		this.type = type;
+	}
+	
+	public long getMaxSize() {
+		
+	}
+	
+}

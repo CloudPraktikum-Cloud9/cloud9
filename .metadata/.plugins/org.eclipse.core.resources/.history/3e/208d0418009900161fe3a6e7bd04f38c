@@ -1,0 +1,11 @@
+package models;
+
+public class message {
+	public byte[] marshal(message message) {
+		
+	}
+	
+	public message unmarshal(byte[] messageStream) {
+		return this;
+	}
+}

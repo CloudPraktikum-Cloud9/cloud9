@@ -1,0 +1,32 @@
+package message;
+
+public class message {
+	private MessageType type;
+	private String body;
+	
+	public message(MessageType type) {
+		this.type = type;
+	}
+	
+	
+	public byte[] marshal() {
+		byte[] message = this.getBody().getBytes();
+		if(message.length > this.type.getMaxSize()) {
+			//Add logger error here
+			return null;
+		}
+		else return message;
+	}
+	
+	public message unmarshal(byte[] messageStream) {
+		return this;
+	}
+
+	public String getBody() {
+		return body;
+	}
+
+	public void setBody(String body) {
+		this.body = body;
+	}
+}
