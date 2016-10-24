@@ -1,0 +1,23 @@
+package communication;
+
+public class ConnectionHandler {
+	private Connection connection;
+	
+	public ConnectionHandler() {
+		this.connection = null;
+	}
+	
+	public boolean connect(String address, int port) {
+		this.connection = new ConnectionImpl(address, port);
+		return true;
+	}
+	
+	public boolean disconnect() {
+		return false;
+	}
+	
+	public boolean send(byte[] message);
+	public byte[] receive();
+	public ConnectionState status();
+	
+}

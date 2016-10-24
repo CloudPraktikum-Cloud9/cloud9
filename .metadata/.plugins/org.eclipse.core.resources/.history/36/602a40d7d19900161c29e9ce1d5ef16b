@@ -1,0 +1,15 @@
+package ui;
+
+import communication.Connection;
+import communication.ConnectionImpl;
+
+public class Application {
+	public static void main(String[] args) 
+	{
+		Connection connection = new ConnectionImpl();
+		CommandHandler commandHandler = new CommandHandler(connection);
+		Console console = new Console(commandHandler);
+		console.start();
+		System.exit(0);
+	}
+}

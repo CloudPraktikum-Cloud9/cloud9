@@ -4,12 +4,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import communication.Connection;
+import communication.ConnectionState;
+import message.Message;
+import message.MessageType;
+
 public class CommandHandler {
 
 	private Map<String,Command> commandsSupported =new HashMap<String,Command>();
+	private Connection connection;
+	//private int applicationType;
 	
 	
-	public CommandHandler() {
+	public CommandHandler(Connection connection, int applicationType) {
+		this.connection = connection;
+		//this.applicationType = applicationType;
 		commandsSupported.put("connect", new Command(2, "Use : connect <address> <port> \n Description :  To establish a TCP-connection to the echo server"));
 		commandsSupported.put("disconnect", new Command(0, "Use : disconnect /n Description : To disconnect from the connected server "));
 		commandsSupported.put("send", new Command(1, "Use : send <message> /n Description : Sends a text message to the echo server"));
@@ -39,38 +48,59 @@ public class CommandHandler {
 		return true;
 	}
 	
-	private void logLevel(String string) {
+	private boolean logLevel(String string) {
 		// TODO Auto-generated method stub
-		
+		return true;
 	}
 
-	private void send(String string) {
-		// TODO Auto-generated method stub
-		
+	private boolean send(String message, Console console) {
+		if (this.connection.status() == ConnectionState.CONNECTED) {
+			Message messageObj = new Message(MessageType.TELNET, message);
+			if (messageObj.unmarshal(this.connection.sendBlocking(messageObj.marshal()))) {
+				console.setLastServerResponse(messageObj.getBody()); 
+				console.writeMessage(messageObj.getBody());
+				return true;
+			}
+		}
+		return false;
 	}
 
-	private void quit() {
+	private boolean quit(Console console) {
 		// TODO Auto-generated method stub
-		
+		console.quit();
+		return true;
 	}
 
-	private void help() {
+	private boolean help(Console console) {
 		// TODO Auto-generated method stub
-		
+		this.commandHelp(console);
+		return true;
 	}
 
-	private void disconnect() {
-		// TODO Auto-generated method stub
-		
+	private boolean disconnect(Console console) {
+		boolean state = false;
+		if (this.connection.status() == ConnectionState.CONNECTED) {
+			state = this.connection.disconnect();
+			if (state) console.writeMessage("Connection terminated");
+			else console.writeMessage("Error occoured. Please check logs for info");
+		} else {
+			console.writeMessage("No connection present. Please create a connection to disconnect");
+		}
+		return state;
 	}
 
-	private void connect(String adress, String port) {
+	private boolean connect(String address, String port, Console console) {
 		// Check if the IP is valid
 		// Check if the port number is valid
-		// Convert the port number to int
-		// Call method from Connection package to create connection
-		
-		
+		boolean state = false;
+		if (this.connection.status() == ConnectionState.CONNECTED) {
+			console.writeMessage("Connection already created. Cannot create multiple connections");
+		} else {
+			state = this.connection.connect(address, Integer.parseInt(port));
+			if (state) console.writeMessage("Connection to MSRG Echo server established: "); 
+			else console.writeMessage("Error occoured. Please check the logs for details "); 
+		}
+		return state;
 	}
 	
 	
@@ -79,29 +109,23 @@ public class CommandHandler {
 			if (this.isSyntactiallyCorrect(tokens)) {
 				switch(tokens[0]) {
 				case "connect" :
-					this.connect(tokens[1], tokens[2]);
-					break;
+					return this.connect(tokens[1], tokens[2],console);
 				case "disconnect" :
-					this.disconnect();
-					break;
+					return this.disconnect(console);
 				case "send" :
-					this.send(tokens[1]);
-					break;
+					return this.send(tokens[1], console);
 				case "logLevel" :
-					this.logLevel(tokens[1]);
-					break;
+					return this.logLevel(tokens[1]);
 				case "help" :
-					this.help();
-					break;
+					return this.help(console);
 				case "quit" :
-					this.quit();
-					break;
+					return this.quit(console);
 				}
 			} else {
 				// Syntactically Incorrect
 				console.writeMessage(this.commandsSupported.get(tokens[0]).getHelp());
+				return true;
 			}
-			return true;
 		}
 		return false;
 	}

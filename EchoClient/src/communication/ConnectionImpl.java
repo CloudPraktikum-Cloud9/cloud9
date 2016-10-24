@@ -12,44 +12,50 @@ public class ConnectionImpl implements Connection {
 	private SocketChannel socketChannel;
 	private ConnectionState state;
 	
-	public ConnectionImpl(String address, int port) {
-		this.serverAddress = address;
-		this.tcpPort = port;
+	public ConnectionImpl() {
+		this.serverAddress = null;
+		this.tcpPort = -1;
 		this.socketChannel=null;
 		this.state = ConnectionState.DISCONNECTED;
 	}
 	
 	
 	@Override
-	public boolean connect() {
-		try {
-			this.socketChannel = SocketChannel.open();
-			this.socketChannel.connect(new InetSocketAddress(this.serverAddress, this.tcpPort));
-		} catch (IOException e1) {
-			// IO exception.
-			return false;
-		};
-		return true;
+	public boolean connect(String address, int port) {
+		if (this.status() == ConnectionState.DISCONNECTED) {
+			try {
+				this.serverAddress = address;
+				this.tcpPort = port;
+				this.socketChannel = SocketChannel.open();
+				this.socketChannel.connect(new InetSocketAddress(this.serverAddress, this.tcpPort));
+				return true;
+			} catch (IOException e1) {
+				// IO exception.
+				return false;
+			}
+		}
+		return false;
 	}
 
 	@Override
 	public boolean disconnect() {
-		try {
-			this.socketChannel.close();
-		} catch (IOException e) {
-			// Handle IO exception
-			return false;
+		if (this.status() == ConnectionState.CONNECTED) {
+			try {
+				this.socketChannel.close();
+				return true;
+			} catch (IOException e) {
+				// Handle IO exception
+				return false;
+			}
 		}
-		return true;
+		return false;
 	}
 
-	@Override
 	public boolean send(byte[] message) {
 		if (this.status() == ConnectionState.CONNECTED) {
 			ByteBuffer messageBuf = ByteBuffer.allocate(128000);
 			messageBuf.clear();
 			messageBuf.put(message, 0, message.length);
-
 			messageBuf.flip();
 			while(messageBuf.hasRemaining()) {
 				try {
@@ -67,22 +73,37 @@ public class ConnectionImpl implements Connection {
 			
 		
 	}
-
+	
 	@Override
+	public byte[] sendBlocking(byte[] message) {
+		byte[] recvdMsg = null;
+		if(this.send(message)) {
+			while(true) {
+				recvdMsg = this.receive();
+				return recvdMsg;
+			}	
+		}
+		return recvdMsg;
+	}
+
 	public byte[] receive() {
 		if (this.status() == ConnectionState.CONNECTED) {
 			ByteBuffer messageBuf = ByteBuffer.allocate(128000);
-			byte[] message = null;
+			byte[] message = new byte[128000];
+			int i=0;
+			byte bufChar;
 			try {
-				int bytesRead = this.socketChannel.read(messageBuf);
-				if (bytesRead != -1) {
-					messageBuf.get(message);
-				} else {return null;}
+				this.socketChannel.read(messageBuf);
+				while (messageBuf.hasRemaining()) {
+					bufChar = messageBuf.get();
+					message[i++] = bufChar;
+				}
+				System.out.println("Message is : " + message);
+				return message;
 			} catch (IOException e) {
-				//Error while reading
+				// IOexception while socket read
 				return null;
-			}
-			return message;
+			}	
 		} else{
 			// Disconnected Server
 			return null;
@@ -91,7 +112,7 @@ public class ConnectionImpl implements Connection {
 
 	@Override
 	public ConnectionState status() {
-		if(this.socketChannel.isConnected()) {
+		if(this.socketChannel != null && this.socketChannel.isConnected()) {
 			this.state = ConnectionState.CONNECTED;
 		} else {
 			this.state = ConnectionState.DISCONNECTED;

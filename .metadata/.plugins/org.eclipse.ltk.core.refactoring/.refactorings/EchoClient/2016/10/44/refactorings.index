@@ -7,3 +7,6 @@
 1477224919097	Rename compilation unit 'UiManager.java'
 1477229171578	Encapsulate field 'args'
 1477229178834	Encapsulate field 'help'
+1477304589709	Delete element
+1477311612881	Encapsulate field 'lastServerResponse'
+1477312994917	Encapsulate field 'type'

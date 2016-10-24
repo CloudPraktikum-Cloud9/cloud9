@@ -1,0 +1,15 @@
+package communication;
+
+public class ConnectionHandler {
+	private Connection connection;
+	
+	public ConnectionHandler() {
+		this.connection = null;
+	}
+	
+	public Connection connect() {
+		return null;
+	}
+	
+	
+}

@@ -16,5 +16,9 @@ public enum MessageType {
 	public long getMaxSize() {
 		return this.maxSize;
 	}
+
+	public int getType() {
+		return type;
+	}
 	
 }

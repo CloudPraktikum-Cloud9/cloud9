@@ -1,0 +1,20 @@
+package ui;
+
+import communication.Connection;
+import communication.ConnectionImpl;
+
+public class Application {
+	public enum name {
+		TELNET;	
+	}
+	
+	public static void main(String[] args) 
+	{
+		Application app = new Application();
+		Connection connection = new ConnectionImpl();
+		CommandHandler commandHandler = new CommandHandler(connection);
+		Console console = new Console(commandHandler, app.);
+		console.start();
+		System.exit(0);
+	}
+}

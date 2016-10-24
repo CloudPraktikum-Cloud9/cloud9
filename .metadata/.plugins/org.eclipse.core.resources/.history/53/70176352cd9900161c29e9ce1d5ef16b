@@ -1,0 +1,7 @@
+package communication;
+
+public class ConnectionHandler {
+	private Connection connection;
+	
+	
+}
