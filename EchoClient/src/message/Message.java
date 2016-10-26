@@ -1,5 +1,7 @@
 package message;
 
+import java.nio.charset.Charset;
+
 public class Message {
 	private MessageType type;
 	private String body;
@@ -12,7 +14,8 @@ public class Message {
 	
 	// Message type and other IE will go in the message in the future.
 	public byte[] marshal() {
-		byte[] message = this.getBody().getBytes();
+		String temp =this.getBody();
+		byte[] message = temp.concat("\r\n").getBytes(Charset.forName("UTF-8" ));
 		if(message.length > this.type.getMaxSize()) {
 			//Add logger error here
 			return null;
@@ -23,7 +26,7 @@ public class Message {
 	
 	// Message type and other IE will go in the message in the future.
 	public boolean unmarshal(byte[] messageStream) {
-		String message = messageStream.toString();
+		String message = new String( messageStream, Charset.forName("UTF-8") );
 		this.body = message;
 		this.type = MessageType.TELNET; // Default message type
 		return true;

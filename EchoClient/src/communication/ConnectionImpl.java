@@ -3,7 +3,10 @@ package communication;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.Charset;
+import java.util.Arrays;
 
 public class ConnectionImpl implements Connection {
 
@@ -28,6 +31,7 @@ public class ConnectionImpl implements Connection {
 				this.tcpPort = port;
 				this.socketChannel = SocketChannel.open();
 				this.socketChannel.connect(new InetSocketAddress(this.serverAddress, this.tcpPort));
+				byte[] recvdMsg = this.receive();
 				return true;
 			} catch (IOException e1) {
 				// IO exception.
@@ -55,11 +59,11 @@ public class ConnectionImpl implements Connection {
 		if (this.status() == ConnectionState.CONNECTED) {
 			ByteBuffer messageBuf = ByteBuffer.allocate(128000);
 			messageBuf.clear();
-			messageBuf.put(message, 0, message.length);
-			messageBuf.flip();
+			messageBuf.put(message);
+			int bytes;
 			while(messageBuf.hasRemaining()) {
 				try {
-					this.socketChannel.write(messageBuf);
+					bytes = this.socketChannel.write(messageBuf);
 				} catch (IOException e) {
 					// Error while writing;
 					return false;
@@ -69,9 +73,7 @@ public class ConnectionImpl implements Connection {
 		} else{
 			// Disconnected Server
 			return false;
-		}
-			
-		
+		}	
 	}
 	
 	@Override
@@ -89,17 +91,26 @@ public class ConnectionImpl implements Connection {
 	public byte[] receive() {
 		if (this.status() == ConnectionState.CONNECTED) {
 			ByteBuffer messageBuf = ByteBuffer.allocate(128000);
-			byte[] message = new byte[128000];
+			String message= "";
+			char bufChar;
+			byte buffer;
+			byte[] b = new byte[128000];
 			int i=0;
-			byte bufChar;
 			try {
 				this.socketChannel.read(messageBuf);
+				messageBuf.flip();
 				while (messageBuf.hasRemaining()) {
-					bufChar = messageBuf.get();
-					message[i++] = bufChar;
+					buffer = messageBuf.get();
+					b[i++] = buffer;
+					bufChar = (char) buffer;
+					if(bufChar != '\n') {
+						message += bufChar; 
+					} else {
+						message += '\n';
+					}
 				}
-				System.out.println("Message is : " + message);
-				return message;
+				System.out.println(message);
+				return null;
 			} catch (IOException e) {
 				// IOexception while socket read
 				return null;

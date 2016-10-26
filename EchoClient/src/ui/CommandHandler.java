@@ -4,18 +4,26 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.LogManager;
+
 import communication.Connection;
 import communication.ConnectionState;
 import message.Message;
 import message.MessageType;
 
+
+/*@description: Handles all the commands that are recognized by the console
+ *
+ * */
 public class CommandHandler {
 
 	private Map<String,Command> commandsSupported =new HashMap<String,Command>();
 	private Connection connection;
-	//private int applicationType;
 	
-	
+	/*@description: Constructor initializes all the commands supported by the commandHandler
+	 *
+	 * */
 	public CommandHandler(Connection connection, int applicationType) {
 		this.connection = connection;
 		//this.applicationType = applicationType;
@@ -35,8 +43,13 @@ public class CommandHandler {
 	public boolean isSyntactiallyCorrect(String[] command) {
 		if(this.commandsSupported.containsKey(command[0])) {
 			Command cmd = this.commandsSupported.get(command[0]);
-			if (cmd.getArgs() == command.length-1) return true;
-			else return false;
+			if (command[0].equals("send")) {
+				if (command.length-1 >= cmd.getArgs()) return true;
+				else return false;
+			}else {
+				if (cmd.getArgs() == command.length-1) return true;
+				else return false;
+			}
 		} else return false;
 	}
 	
@@ -48,8 +61,35 @@ public class CommandHandler {
 		return true;
 	}
 	
-	private boolean logLevel(String string) {
+	private boolean logLevel(String string, Console console) {
 		// TODO Auto-generated method stub
+		switch(string) {
+		case "ALL":
+			LogManager.getRootLogger().setLevel(Level.ALL);
+			break;
+		case "DEBUG" :
+			LogManager.getRootLogger().setLevel(Level.DEBUG);
+			break;
+		case "INFO":
+			LogManager.getRootLogger().setLevel(Level.INFO);
+			break;
+		case "WARN":
+			LogManager.getRootLogger().setLevel(Level.WARN);
+			break;
+		case "ERROR":
+			LogManager.getRootLogger().setLevel(Level.ERROR);
+			break;
+		case "FATAL":
+			LogManager.getRootLogger().setLevel(Level.FATAL);
+			break;
+		case "OFF":
+			LogManager.getRootLogger().setLevel(Level.OFF);
+			break;
+		default:
+			return false;
+			
+		}
+		console.writeMessage("Logging set to : " + string);
 		return true;
 	}
 
@@ -97,8 +137,9 @@ public class CommandHandler {
 			console.writeMessage("Connection already created. Cannot create multiple connections");
 		} else {
 			state = this.connection.connect(address, Integer.parseInt(port));
-			if (state) console.writeMessage("Connection to MSRG Echo server established: "); 
-			else console.writeMessage("Error occoured. Please check the logs for details "); 
+			if (!state) {// Connection established Log4j message
+				console.writeMessage("Error occoured. Please check the logs for details "); 
+			}
 		}
 		return state;
 	}
@@ -113,9 +154,13 @@ public class CommandHandler {
 				case "disconnect" :
 					return this.disconnect(console);
 				case "send" :
-					return this.send(tokens[1], console);
+					String message= "";
+					for(int i=0; i<tokens.length;i++) {
+						message = message + tokens[i] + " ";
+					}
+					return this.send(message.trim(), console);
 				case "logLevel" :
-					return this.logLevel(tokens[1]);
+					return this.logLevel(tokens[1], console);
 				case "help" :
 					return this.help(console);
 				case "quit" :
