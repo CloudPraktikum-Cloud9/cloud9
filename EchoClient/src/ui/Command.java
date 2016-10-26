@@ -1,5 +1,7 @@
 package ui;
 
+/*@description : A template for command creation
+ * */
 public class Command {
 	private int args;
 	private String help;

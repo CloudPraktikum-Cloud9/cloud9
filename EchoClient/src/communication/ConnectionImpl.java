@@ -3,23 +3,28 @@ package communication;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.nio.channels.SocketChannel;
-import java.nio.charset.Charset;
-import java.util.Arrays;
 
+import org.apache.log4j.Logger;
+
+
+/*@description: Implementation of the connection interface
+ * */
 public class ConnectionImpl implements Connection {
 
 	private String serverAddress;
 	private int tcpPort;
 	private SocketChannel socketChannel;
 	private ConnectionState state;
+	private static Logger logger = Logger.getLogger(ConnectionImpl.class);
 	
 	public ConnectionImpl() {
+		
 		this.serverAddress = null;
 		this.tcpPort = -1;
 		this.socketChannel=null;
 		this.state = ConnectionState.DISCONNECTED;
+		logger.info("ConnectionImpl Initialized");
 	}
 	
 	
@@ -31,10 +36,10 @@ public class ConnectionImpl implements Connection {
 				this.tcpPort = port;
 				this.socketChannel = SocketChannel.open();
 				this.socketChannel.connect(new InetSocketAddress(this.serverAddress, this.tcpPort));
-				byte[] recvdMsg = this.receive();
+				this.receive();
 				return true;
 			} catch (IOException e1) {
-				// IO exception.
+				logger.error("IO exception occoured at connect: " + e1.toString());
 				return false;
 			}
 		}
@@ -48,7 +53,7 @@ public class ConnectionImpl implements Connection {
 				this.socketChannel.close();
 				return true;
 			} catch (IOException e) {
-				// Handle IO exception
+				logger.error("IO exception occoured at disconnect: " + e.toString());
 				return false;
 			}
 		}
@@ -60,12 +65,11 @@ public class ConnectionImpl implements Connection {
 			ByteBuffer messageBuf = ByteBuffer.allocate(128000);
 			messageBuf.clear();
 			messageBuf.put(message);
-			int bytes;
 			while(messageBuf.hasRemaining()) {
 				try {
-					bytes = this.socketChannel.write(messageBuf);
+					this.socketChannel.write(messageBuf);
 				} catch (IOException e) {
-					// Error while writing;
+					logger.error("IO exception occoured at send: " + e.toString());
 					return false;
 				}
 			}
@@ -87,6 +91,7 @@ public class ConnectionImpl implements Connection {
 		}
 		return recvdMsg;
 	}
+
 
 	public byte[] receive() {
 		if (this.status() == ConnectionState.CONNECTED) {
@@ -112,7 +117,7 @@ public class ConnectionImpl implements Connection {
 				System.out.println(message);
 				return null;
 			} catch (IOException e) {
-				// IOexception while socket read
+				logger.error("IO exception occoured at connect: " + e.toString());
 				return null;
 			}	
 		} else{

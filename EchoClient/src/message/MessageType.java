@@ -1,5 +1,6 @@
 package message;
-
+/*@description: Enumerator to keep track of all the message types and their associated properties
+ * */
 public enum MessageType {
 	TELNET(1);
 	
