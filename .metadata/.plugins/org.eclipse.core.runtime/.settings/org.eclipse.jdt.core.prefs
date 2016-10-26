@@ -1,6 +1,0 @@
-#Fri Oct 21 18:48:54 CEST 2016
-org.eclipse.jdt.core.classpathVariable.JRE_SRCROOT=
-org.eclipse.jdt.core.classpathVariable.JRE_LIB=/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar
-org.eclipse.jdt.core.classpathVariable.JRE_SRC=/usr/lib/jvm/java-8-oracle/src.zip
-eclipse.preferences.version=1
-org.eclipse.jdt.core.codeComplete.visibilityCheck=enabled

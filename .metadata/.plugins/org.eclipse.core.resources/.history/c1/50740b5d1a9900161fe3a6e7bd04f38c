@@ -1,9 +1,0 @@
-package ui;
-
-public class UiManager {
-	private String prompt = "EchoClient>";
-	
-	public void DisplayHelp() {
-		
-	}
-}

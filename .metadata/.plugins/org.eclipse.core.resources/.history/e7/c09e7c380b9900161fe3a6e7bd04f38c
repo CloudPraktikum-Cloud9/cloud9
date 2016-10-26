@@ -1,9 +1,0 @@
-package communication;
-
-public interface Connection {
-	public abstract ConnectionImpl connect(String address, int port);
-	public abstract boolean disconnect();
-	public abstract boolean send(byte[] message);
-	public abstract byte[] receive();
-	public ConnectionState status();
-}

@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename resource &apos;echoClient&apos; to &apos;EchoClient&apos;" description="Rename resource &apos;echoClient&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="/echoClient" name="EchoClient" stamp="1477065901428" updateReferences="true"/>
-</session>

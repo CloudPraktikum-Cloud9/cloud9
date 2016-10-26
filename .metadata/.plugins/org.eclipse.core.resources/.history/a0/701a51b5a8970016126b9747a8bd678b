@@ -1,8 +1,0 @@
-package ui;
-
-public class EchoClient {
-	public static void main(){
-		
-	}
-
-}

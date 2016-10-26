@@ -1,9 +1,0 @@
-package ui;
-
-public abstract class UserInterfaceImpl {
-	private String prompt = "EchoClient>";
-	
-	public abstract void displayHelp();
-	public abstract void readCommand();
-	public abstract void writeMessage();
-}
